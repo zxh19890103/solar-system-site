@@ -2,10 +2,10 @@ import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
 export class TailProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "/shaders/tail.vert.glsl";
+        return "shaders/tail.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "/shaders/tail.frag.glsl";
+        return "shaders/tail.frag.glsl";
     }
     boot() {
         const { gl, program, body } = this;

@@ -3,10 +3,10 @@ import { ObjectProgram } from "./program.class.js"
 import { range } from "./utils.js"
 export class PointProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "/shaders/point.vert.glsl";
+        return "shaders/point.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "/shaders/point.frag.glsl";
+        return "shaders/point.frag.glsl";
     }
     boot() {
         const { gl, program, body, ether } = this;

@@ -2,10 +2,10 @@ import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
 export class OrbitProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "/shaders/orbit.vert.glsl";
+        return "shaders/orbit.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "/shaders/orbit.frag.glsl";
+        return "shaders/orbit.frag.glsl";
     }
     boot() {
         const { gl, program, body, ether } = this;

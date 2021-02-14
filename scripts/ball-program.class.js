@@ -2,10 +2,10 @@ import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
 export class BallProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "/shaders/ball.vert.glsl";
+        return "shaders/ball.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "/shaders/ball.frag.glsl";
+        return "shaders/ball.frag.glsl";
     }
     boot() {
         const { gl, program, ether, body } = this;
