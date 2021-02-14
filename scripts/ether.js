@@ -1,7 +1,6 @@
-import { SECONDS_IN_A_DAY } from "../canvas-uni-constants";
-import { Sun } from "./body-info";
-import { AU } from "./constants";
-import { range } from "./utils";
+import { Sun } from "./body-info.js"
+import { AU, SECONDS_IN_A_DAY } from "./constants.js"
+import { range } from "./utils.js"
 const GRAVITY_CONST = 6.67430 * 0.00001; // x 10 ^ -5
 // const UNIT_OF_TIME = 10
 // const RENDER_PERIOD = 100

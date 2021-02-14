@@ -1,6 +1,6 @@
-import { RenderBodyAs } from "./body.class";
-import { ObjectProgram } from "./program.class";
-import { range } from "./utils";
+import { RenderBodyAs } from "./body.class.js"
+import { ObjectProgram } from "./program.class.js"
+import { range } from "./utils.js"
 export class PointProgram extends ObjectProgram {
     get vertexShaderSource() {
         return "/shaders/point.vert.glsl";

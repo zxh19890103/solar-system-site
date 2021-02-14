@@ -1,5 +1,5 @@
-import { AU, RAD_PER_DEGREE } from "./constants";
-import { approximates, parseColor } from "./utils";
+import { AU, RAD_PER_DEGREE } from "./constants.js"
+import { approximates, parseColor } from "./utils.js"
 const COLORS = {
     grey: [128, 128, 128],
     brown: [165, 42, 42],
