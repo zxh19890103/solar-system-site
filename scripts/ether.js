@@ -40,7 +40,7 @@ export class Ether {
         buttons.className = "buttons";
         Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Ceres", "Eris", "Pluto").forEach((text, i) => {
             const a = document.createElement("a");
-            a.href = `/?sys=${text}`;
+            a.href = `?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
             buttons.appendChild(a);
         });
