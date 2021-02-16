@@ -2,10 +2,10 @@ import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
 export class BodyProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "shaders/body.vert.glsl";
+        return "/shaders/body.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "shaders/body.frag.glsl";
+        return "/shaders/body.frag.glsl";
     }
     async setup() {
         this.log("initializing...");

@@ -2,10 +2,10 @@ import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
 export class CircleProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "shaders/circle.vert.glsl";
+        return "/shaders/circle.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "shaders/circle.frag.glsl";
+        return "/shaders/circle.frag.glsl";
     }
     async setup() {
         this.log("initializing...");

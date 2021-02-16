@@ -246,7 +246,7 @@ export class Body {
                 const r = size * alpha;
                 for (let x = 0; x < 2; x++) {
                     vertices.push((r * cos(a) + (x === 0 ? 0 : k)) * AU, (r * sin(a) + (x === 0 ? 0 : k)) * AU, h);
-                    colors.push(...(x === 0 ? color : color2), (.01 / k));
+                    colors.push(...(x === 0 ? color : color2), (1 - alpha) * .01 / k);
                 }
             }
             size += .00007;

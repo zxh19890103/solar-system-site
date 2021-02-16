@@ -2,10 +2,10 @@ import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
 export class RingsProgram extends ObjectProgram {
     get vertexShaderSource() {
-        return "shaders/rings.vert.glsl";
+        return "/shaders/rings.vert.glsl";
     }
     get fragmentShaderSource() {
-        return "shaders/rings.frag.glsl";
+        return "/shaders/rings.frag.glsl";
     }
     boot() {
         const { gl, body, ether } = this;

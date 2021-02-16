@@ -132,7 +132,7 @@ const solar = async () => {
     ])
         .lookAt(sun)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const comets = async () => {
@@ -146,10 +146,10 @@ const comets = async () => {
     const haleBopp = new Body(HaleBopp);
     createBodies(sun, RenderBodyAs.Point, tempel1, RenderBodyAs.Orbit, RenderBodyAs.Tails, homes, RenderBodyAs.Orbit, RenderBodyAs.Tails, halley, RenderBodyAs.Orbit, RenderBodyAs.Tails, haleBopp, RenderBodyAs.Orbit, RenderBodyAs.Tails);
     cam.put([
-        .2, 5 * AU, AU * .3
+        .2, -6 * AU, 3
     ]).lookAt(sun)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const earthSys = async () => {
@@ -164,7 +164,7 @@ const earthSys = async () => {
     ])
         .lookAt(earth)
         .adjust(Math.PI * (10 / 180), // human naked eyes.
-            .1, Infinity);
+    .1, Infinity);
     run();
 };
 const jupiterSys = async () => {
@@ -183,7 +183,7 @@ const jupiterSys = async () => {
     cam.put(cameraCoords)
         .lookAt(jupiter)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const saturnSys = async () => {
@@ -198,7 +198,7 @@ const saturnSys = async () => {
     cam.put([0, -Rhea.aphelion, 300])
         .lookAt(saturn)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const neptuneSys = async () => {
@@ -210,7 +210,7 @@ const neptuneSys = async () => {
     cam.put([0, -Proteus.semiMajorAxis, 10])
         .lookAt(neptune)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            10, Infinity);
+    10, Infinity);
     run();
 };
 const single = async (name) => {
@@ -233,10 +233,10 @@ const single = async (name) => {
     cam.put([0, -inf.radius * 3, inf.radius * .68])
         .lookAt(pluto)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            .1, Infinity);
+    .1, Infinity);
     run();
 };
-const worker = new Worker("scripts/loop.js");
+const worker = new Worker("/3d/loop.ts");
 const match = location.search.match(/\?sys=([a-zA-Z]+)/);
 if (match === null) {
     single("Earth");
