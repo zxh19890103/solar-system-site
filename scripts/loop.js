@@ -1,6 +1,7 @@
 ;
 (function () {
-    importScripts("/scripts/gl-matrix-min.js");
+    importScripts("../env.js");
+    importScripts(GLMATRIX_SCRIPT_URL);
     const GRAVITY_CONST = 6.67430 * 0.00001;
     let UNIT_OF_TIME = 100000; // unit's second
     let LOOPS = 10;

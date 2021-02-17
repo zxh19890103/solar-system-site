@@ -2,11 +2,7 @@ import { Sun } from "./body-info.js"
 import { AU, SECONDS_IN_A_DAY } from "./constants.js"
 import { range } from "./utils.js"
 const GRAVITY_CONST = 6.67430 * 0.00001; // x 10 ^ -5
-// const UNIT_OF_TIME = 10
-// const RENDER_PERIOD = 100
-// 
-// const DAYS_PER_SECOND = RENDER_PERIOD * UNIT_OF_TIME / (60 * 24)
-const { mat4, vec3 } = glMatrix;
+const { vec3 } = glMatrix;
 const { cos, sin, PI, sqrt } = Math;
 // x10 ^ 6 passed.
 // console.log(1000000 * GRAVITY_CONST * Earth.mass / (Earth.radius * Earth.radius))

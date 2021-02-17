@@ -27,6 +27,7 @@ import { OrbitProgram } from "./orbit-program.class.js"
 import { RingsProgram } from "./rings-program.class.js"
 import { AU } from "./constants.js"
 import { TailProgram } from "./tail-program.class.js"
+import "../env.js";
 let W = 0;
 let H = 0;
 let gl;
@@ -132,7 +133,7 @@ const solar = async () => {
     ])
         .lookAt(sun)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const comets = async () => {
@@ -149,7 +150,7 @@ const comets = async () => {
         .2, -6 * AU, 3
     ]).lookAt(sun)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const earthSys = async () => {
@@ -164,7 +165,7 @@ const earthSys = async () => {
     ])
         .lookAt(earth)
         .adjust(Math.PI * (10 / 180), // human naked eyes.
-            .1, Infinity);
+    .1, Infinity);
     run();
 };
 const jupiterSys = async () => {
@@ -183,7 +184,7 @@ const jupiterSys = async () => {
     cam.put(cameraCoords)
         .lookAt(jupiter)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const saturnSys = async () => {
@@ -198,7 +199,7 @@ const saturnSys = async () => {
     cam.put([0, -Rhea.aphelion, 300])
         .lookAt(saturn)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            100, Infinity);
+    100, Infinity);
     run();
 };
 const neptuneSys = async () => {
@@ -210,7 +211,7 @@ const neptuneSys = async () => {
     cam.put([0, -Proteus.semiMajorAxis, 10])
         .lookAt(neptune)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            10, Infinity);
+    10, Infinity);
     run();
 };
 const single = async (name) => {
@@ -233,10 +234,10 @@ const single = async (name) => {
     cam.put([0, -inf.radius * 3, inf.radius * .68])
         .lookAt(pluto)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
-            .1, Infinity);
+    .1, Infinity);
     run();
 };
-const worker = new Worker("/scripts/loop.js");
+const worker = new Worker(WORKER_SCRIPT_URL);
 const match = location.search.match(/\?sys=([a-zA-Z]+)/);
 if (match === null) {
     single("Earth");
