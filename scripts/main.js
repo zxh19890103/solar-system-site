@@ -243,15 +243,15 @@ const compare = (...infs) => {
     infs.sort((inf0, inf1) => inf1.radius - inf0.radius);
     const bodies = infs.map(inf => new Body(inf));
     const Rt = infs.reduce((r, inf) => inf.radius + r, 0);
-    const computesX = () => {
-    };
-    const X_FOV = 20;
+    const X_FOV = 28;
     const FAR = Rt / Math.tan(X_FOV * RAD_PER_DEGREE);
     const FAR_OF_ONE_DEGREE = Rt / X_FOV;
     let x = 0, z = 0;
     bodies.forEach((body, i) => {
         body.coordinates = [x, 0, i && z];
-        x += Math.max(infs[i].radius, FAR_OF_ONE_DEGREE) + 10 * FAR_OF_ONE_DEGREE;
+        if (infs[i + 1] === undefined)
+            return;
+        x += Math.max(infs[i].radius, FAR_OF_ONE_DEGREE) + Math.max(1.5 * infs[i + 1].radius, 10 * FAR_OF_ONE_DEGREE);
     });
     createBodies(...bodies);
     cam.put([0, -FAR, .1])
