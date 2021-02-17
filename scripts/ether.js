@@ -34,7 +34,7 @@ export class Ether {
         document.body.appendChild(this.$textPanel);
         const buttons = document.createElement("div");
         buttons.className = "buttons";
-        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", ...Object.keys(Bodies13)).forEach((text, i) => {
+        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "compare", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
