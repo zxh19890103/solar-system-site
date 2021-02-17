@@ -1,4 +1,4 @@
-import { Sun } from "./body-info.js"
+import { Bodies13, Sun } from "./body-info.js"
 import { AU, SECONDS_IN_A_DAY } from "./constants.js"
 import { range } from "./utils.js"
 const GRAVITY_CONST = 6.67430 * 0.00001; // x 10 ^ -5
@@ -34,7 +34,7 @@ export class Ether {
         document.body.appendChild(this.$textPanel);
         const buttons = document.createElement("div");
         buttons.className = "buttons";
-        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Ceres", "Eris", "Pluto").forEach((text, i) => {
+        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
@@ -67,11 +67,11 @@ export class Ether {
         const rgba = [].map.call(b.inf.color, c => 0 ^ c * 255);
         if (this.moveOff) {
             b.translates();
-            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> ${(b.inf.aphelion / AU).toFixed(2)} AU`);
+            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> aphelion: ${(b.inf.aphelion / AU).toFixed(2)} AU; size: ${(b.inf.radius * 2).toFixed(2)} (e3 km)`);
             return b;
         }
         if (vec3.len(b.velocity) === 0) {
-            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span>, the center, no period.`);
+            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span>, the center, no orbital period.`);
             return b;
         }
         const orbitalPeriod = this.computesOrbitalPeriod(inf.semiMajorAxis, b.inf.ref);
@@ -108,6 +108,8 @@ export class Ether {
         return fi;
     }
     move() {
+        if (this.moveOff)
+            return;
         if (this.waitingNewBundle)
             return;
         if (this.animationDataReaderOffset >= this.animationDataReader.byteLength) {

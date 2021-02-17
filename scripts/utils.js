@@ -31,7 +31,9 @@ export const randColor = (basis) => {
         color[3] = 1;
         return color;
     }
-    return Array(4)
+    const color = Array(4)
         .fill(0)
         .map(Math.random);
+    color[3] = 1;
+    return color;
 };
