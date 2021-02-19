@@ -243,20 +243,27 @@ const compare = (...infs) => {
     infs.sort((inf0, inf1) => inf1.radius - inf0.radius);
     const bodies = infs.map(inf => new Body(inf));
     const Rt = infs.reduce((r, inf) => inf.radius + r, 0);
-    const X_FOV = 28;
+    const X_FOV = 30;
     const FAR = Rt / Math.tan(X_FOV * RAD_PER_DEGREE);
-    const FAR_OF_ONE_DEGREE = Rt / X_FOV;
-    let x = 0, z = 0;
-    bodies.forEach((body, i) => {
-        body.coordinates = [x, 0, i && z];
-        if (infs[i + 1] === undefined)
-            return;
-        x += Math.max(infs[i].radius, FAR_OF_ONE_DEGREE) + Math.max(1.5 * infs[i + 1].radius, 10 * FAR_OF_ONE_DEGREE);
-    });
+    const xRad = (r0) => {
+        const angle = Math.asin(r0 / r);
+        return Math.max(RAD_PER_DEGREE, angle);
+    };
+    let r = FAR, z = -.1, a = 0, i = 0;
+    for (const body of bodies) {
+        body.coordinates = [r * Math.sin(a), r * Math.cos(a) + FAR, z];
+        a += xRad(infs[i].radius);
+        i += 1;
+        if (bodies[i] === undefined)
+            break;
+        a += xRad(infs[i].radius);
+        a += 2 * RAD_PER_DEGREE;
+    }
     createBodies(...bodies);
     cam.put([0, -FAR, .1])
+        .up([0, 0, 1])
         .lookAt([0, 0, 0])
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+        .adjust(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };

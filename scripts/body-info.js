@@ -139,7 +139,7 @@ export const Uranus = {
     peribelion: 18.33 * AU,
     semiMajorAxis: 19.2184 * AU,
     avatar: "/nineplanets-org/uranus.png",
-    map: "/maps/uranus-1024x512.jpg",
+    map: "/maps/uranus-1024x512.png",
     color: composeColors(COLORS.blue, COLORS.green),
     mass: approximates(86.810, .013),
     radius: approximates(25362, 7) * .001,
