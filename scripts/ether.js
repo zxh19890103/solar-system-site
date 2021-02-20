@@ -19,7 +19,7 @@ export class Ether {
         this.moveOff = moveOff;
         this.initHTMLPanel();
         this.writeLine(`<h2>Welcome to the real solar!</h2>`);
-        this.writeLine(`Here 1 second = ${this.daysPerSec.toFixed(2)} days.`);
+        this.writeLine(`Here 1 second = ${this.duration(this.daysPerSec * 24 * 60 * 60)}.`);
     }
     set Cam(cam) {
         this.cam = cam;
@@ -34,12 +34,24 @@ export class Ether {
         document.body.appendChild(this.$textPanel);
         const buttons = document.createElement("div");
         buttons.className = "buttons";
+        buttons.style.display = "none";
         Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "compare", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
             buttons.appendChild(a);
         });
+        const trigger = document.createElement("a");
+        trigger.href = "javascript:void(0);";
+        trigger.textContent = "#";
+        trigger.className = "trigger";
+        trigger.onclick = () => {
+            if (buttons.style.display)
+                buttons.style.display = "";
+            else
+                buttons.style.display = "none";
+        };
+        document.body.appendChild(trigger);
         document.body.appendChild(buttons);
     }
     put(b) {
