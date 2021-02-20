@@ -28,6 +28,7 @@ import { RingsProgram } from "./rings-program.class.js"
 import { AU, RAD_PER_DEGREE } from "./constants.js"
 import { TailProgram } from "./tail-program.class.js"
 import "../env.js";
+import { parseColor } from "./utils.js"
 let W = 0;
 let H = 0;
 let gl;
@@ -157,15 +158,33 @@ const comets = async () => {
 const earthSys = async () => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(100, 10);
+    ether = new Ether(10, 5);
     const earth = new Body(Earth).center();
     const luna = new Body(Luna);
-    createBodies(earth, RenderBodyAs.Body, luna, RenderBodyAs.Body, RenderBodyAs.Orbit);
+    const satellite = new Body({
+        ...Luna,
+        name: "Satellite#1",
+        mass: 1 * Math.pow(10, -21),
+        aphelion: (Earth.radius + 2),
+        semiMajorAxis: (Earth.radius + 2),
+        color: parseColor("#ff8800"),
+        inclination: 30 * RAD_PER_DEGREE
+    });
+    const satellite2 = new Body({
+        ...Luna,
+        name: "Satellite#3",
+        mass: 1 * Math.pow(10, -21),
+        aphelion: (Earth.radius + 36),
+        semiMajorAxis: (Earth.radius + 36),
+        color: parseColor("#ffff00"),
+        inclination: 45 * RAD_PER_DEGREE
+    });
+    createBodies(earth, RenderBodyAs.Body, luna, RenderBodyAs.Body, RenderBodyAs.Orbit, satellite, RenderBodyAs.Point, RenderBodyAs.Orbit, satellite2, RenderBodyAs.Point, RenderBodyAs.Orbit);
     cam.put([
-        0, -384, 1
+        0, -38, 1
     ])
         .lookAt(earth)
-        .adjust(Math.PI * (10 / 180), // human naked eyes.
+        .adjust(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -231,14 +250,14 @@ const single = async (name) => {
     }
     cam.put([0, -inf.radius * 3, inf.radius * .68])
         .lookAt(pluto)
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+        .adjust(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
 const compare = (...infs) => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(100, 100, true);
+    ether = new Ether(10, 10, true);
     DEFAULT_RENDER_AS = RenderBodyAs.Body;
     infs.sort((inf0, inf1) => inf1.radius - inf0.radius);
     const bodies = infs.map(inf => new Body(inf));

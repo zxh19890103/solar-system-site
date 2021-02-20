@@ -63,6 +63,9 @@ export class Ether {
                 0
             ];
         }
+        if (inf.rotationPeriod) {
+            b.RotationSpeed = Math.PI * 2 / (60 * inf.rotationPeriod / this.daysPerSec);
+        }
         this.bodies.push(b);
         const rgba = [].map.call(b.inf.color, c => 0 ^ c * 255);
         if (this.moveOff) {

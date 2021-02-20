@@ -21,6 +21,7 @@ export class Body {
         this.colors = [];
         this.orbitalCoordinateCount = 0;
         this.framesCountOfOrbitFin = 0;
+        this.rotationSpeed = .01;
         this.programs = [];
         this.M = 60;
         this.N = 60;
@@ -29,6 +30,9 @@ export class Body {
         this.velocity = velocity;
         this.localMat = mat4.create();
         this.modelMat = mat4.create();
+    }
+    set RotationSpeed(rs) {
+        this.rotationSpeed = rs;
     }
     useProgram(prog) {
         prog.setBody(this);
@@ -40,7 +44,7 @@ export class Body {
         return this;
     }
     rotates(rad) {
-        mat4.rotate(this.localMat, this.localMat, rad, [0, 0, 1]);
+        mat4.rotate(this.localMat, this.localMat, this.rotationSpeed, [0, 0, 1]);
     }
     translates() {
         mat4.translate(this.modelMat, mat4.create(), this.coordinates);
