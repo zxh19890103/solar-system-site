@@ -20,27 +20,48 @@ canvas {
 }
 
 .ether-text-panel {
-  list-style: none;
+  display: block;
   margin: 0;
   padding: 0;
   position: fixed;
   top: 0;
   left: 0;
-  color: white;
-  display: block;
   font-size: 14px;
+  list-style: none;
+  color: white;
 }
 
 .buttons {
+  display: flex;
+  display: -webkit-flex;
   position: fixed;
   top: 0;
-  left: right;
-  width: 100%;
+  left: 0;
   text-align: right;
-  margin: 3px 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 24px;
+  overflow: auto;
 }
 
 .buttons a {
+  display: block;
+  width: 25%;
   color: white;
-  margin: 0 8px 0 0;
+  cursor: pointer;
+  text-align: center;
+}
+
+.trigger {
+  display: block;
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  color: white;
+  font-size: 30px;
+  text-decoration: none;
 }
