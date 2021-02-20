@@ -321,12 +321,14 @@ const planets01 = () => {
     checkboxGroup.style.cssText = `
     position: fixed;
     z-index: 1;
-    bottom: 10px;
+    bottom: 0;
     left: 0;
     width: 100%;
     height: 50px;
     line-height: 50px;
     background: #345;
+    padding: 0 10px;
+    box-sizing: border-box;
   `;
     checkboxGroup.addEventListener("click", (evt) => {
         const target = evt.target;
@@ -344,9 +346,10 @@ const planets01 = () => {
     });
     for (const [name, inf] of Object.entries(Bodies13)) {
         const a = document.createElement("a");
-        a.textContent = name;
+        a.textContent = name.substr(0, 2).toUpperCase();
         a.style.color = selectedBodies.has(name) ? `green` : "white";
-        a.style.marginRight = "5px";
+        a.style.marginRight = "14px";
+        a.style.fontSize = "1.5rem";
         a.style.textDecoration = "none";
         a.style.borderBottom = `1px dashed rgba(${inf.color.map(c => 0 ^ c * 255)})`;
         a.href = "javascript:void(0);";
