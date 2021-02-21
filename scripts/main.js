@@ -178,7 +178,7 @@ const comets = async () => {
 const earthSys = async () => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(10, 5);
+    ether = new Ether(80, 5);
     const earth = new Body(Earth).center();
     const luna = new Body(Luna);
     const satellite = new Body({

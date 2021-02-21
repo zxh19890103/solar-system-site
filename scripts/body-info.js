@@ -70,7 +70,7 @@ export const Earth = {
     peribelion: 147095,
     semiMajorAxis: 149598.023,
     avatar: "/nineplanets-org/earth.png",
-    map: "/maps/earth-4096x2048.jpg",
+    map: "/maps/earth-1000x500.jpg",
     color: composeColors(COLORS.blue, COLORS.green),
     mass: 5.97237,
     radius: 6.371,
@@ -264,7 +264,8 @@ export const Luna = {
     mass: .07342,
     radius: 1.7374,
     inclination: 0 * RAD_PER_DEGREE,
-    ref: Earth
+    ref: Earth,
+    rotationPeriod: 27.321661
 };
 // juptier's
 export const Lo = {
