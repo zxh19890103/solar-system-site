@@ -35,7 +35,7 @@ export class Ether {
         const buttons = document.createElement("div");
         buttons.className = "buttons";
         buttons.style.display = "none";
-        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "compare", ...Object.keys(Bodies13)).forEach((text, i) => {
+        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "compare", "moving", "moving2", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
@@ -66,6 +66,9 @@ export class Ether {
                 xy * sin(angleOnXY),
                 inf.aphelion * sin(inf.inclination)
             ];
+            b.translates();
+            b.rotates(angleOnXY, [0, 0, 1]);
+            b.rotates(inf.inclination, [0, 1, 0]);
         }
         if (b.velocity === undefined) {
             const speed = this.computesOrbitSpeedOnR(b.inf.semiMajorAxis, b.inf.aphelion, b.inf.ref);
@@ -81,7 +84,6 @@ export class Ether {
         this.bodies.push(b);
         const rgba = [].map.call(b.inf.color, c => 0 ^ c * 255);
         if (this.moveOff) {
-            b.translates();
             this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> aphelion: ${(b.inf.aphelion / AU).toFixed(2)} AU; size: ${(b.inf.radius * 2).toFixed(2)} (e3 km)`);
             return b;
         }
@@ -91,7 +93,9 @@ export class Ether {
         }
         const orbitalPeriod = this.computesOrbitalPeriod(inf.semiMajorAxis, b.inf.ref);
         const secBodyTakes = orbitalPeriod / this.daysPerSec;
-        b.framesCountOfOrbitFin = 0 ^ secBodyTakes * 60 * 3;
+        if (b.framesCountOfOrbitFin === 0) {
+            b.framesCountOfOrbitFin = 0 ^ secBodyTakes * 60 * 4;
+        }
         this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> ${this.duration(secBodyTakes)}, ${orbitalPeriod.toFixed(2)} days.`);
         return b;
     }

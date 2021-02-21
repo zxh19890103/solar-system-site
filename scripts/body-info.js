@@ -114,19 +114,7 @@ export const Saturn = {
     mass: 568.34,
     radius: 58.232,
     inclination: 5.51 * RAD_PER_DEGREE,
-    rotationPeriod: 10.5 / 24
-    /**
-     * D Ring	66,900   –  74,510	7,500
-     * C Ring	74,658   –   92,000	17,500
-     * B Ring	92,000   –  117,580	25,500
-     * Cassini Division	117,580   –   122,170	4,700
-     * A ring	122,170   –   136,775	14,600
-     * Roche Division	136,775   –   139,380	2,600
-     * F Ring	140,180 (3)	30   –  500
-     *
-     * total width: 73283
-     */
-    ,
+    rotationPeriod: 10.5 / 24,
     /**
      * D Ring	66,900   –  74,510	7,500
      * C Ring	74,658   –   92,000	17,500

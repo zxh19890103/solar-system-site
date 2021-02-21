@@ -17,8 +17,8 @@ export class RingsProgram extends ObjectProgram {
         const uniform = this.setUniformLMVP();
         const indicesCount = body.vertices.length / 4;
         const frame01 = () => {
-            body.rotates(.01);
             gl.useProgram(this.program);
+            body.selfRotates();
             setVertices();
             setColors();
             uniform();

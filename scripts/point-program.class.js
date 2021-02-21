@@ -9,7 +9,7 @@ export class PointProgram extends ObjectProgram {
         return "/shaders/point.frag.glsl";
     }
     boot() {
-        const { gl, program, body, ether } = this;
+        const { gl, program, body } = this;
         const inf = body.inf;
         const { PI, sin } = Math;
         gl.useProgram(program);

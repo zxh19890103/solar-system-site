@@ -18,8 +18,8 @@ export class BallProgram extends ObjectProgram {
         this.bufferUInt16Array(body.indices);
         const indicesCount = body.indices.length;
         return () => {
-            body.rotates(.01);
             gl.useProgram(program);
+            body.selfRotates();
             setVertices();
             setColors();
             uniform();

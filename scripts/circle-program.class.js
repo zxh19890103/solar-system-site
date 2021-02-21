@@ -27,8 +27,8 @@ export class CircleProgram extends ObjectProgram {
         const indicesCount = body.indices.length;
         const uniform = this.setUniformLMVP();
         return () => {
-            body.rotates(.001);
             gl.useProgram(program);
+            body.selfRotates();
             setIndices();
             setAttrib();
             setSampler();
