@@ -153,8 +153,8 @@ const solar = async () => {
     cam.put([
         0, -Mars.aphelion, Mercury.aphelion
     ])
-        .lookAt(sun)
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+        .see(sun)
+        .perspective(Math.PI * (120 / 180), // human naked eyes.
     100, Infinity);
     run();
 };
@@ -170,8 +170,8 @@ const comets = async () => {
     createBodies(sun, RenderBodyAs.Point, tempel1, RenderBodyAs.Orbit, RenderBodyAs.Tails, homes, RenderBodyAs.Orbit, RenderBodyAs.Tails, halley, RenderBodyAs.Orbit, RenderBodyAs.Tails, haleBopp, RenderBodyAs.Orbit, RenderBodyAs.Tails);
     cam.put([
         .2, -6 * AU, 3
-    ]).lookAt(sun)
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+    ]).see(sun)
+        .perspective(Math.PI * (120 / 180), // human naked eyes.
     100, Infinity);
     run();
 };
@@ -203,8 +203,8 @@ const earthSys = async () => {
     cam.put([
         0, -200, 1
     ])
-        .lookAt(earth)
-        .adjust(Math.PI * (45 / 180), // human naked eyes.
+        .see(earth)
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -214,12 +214,11 @@ const marsSys = async () => {
     ether = new Ether(10, 5);
     const mars = new Body(Mars).center();
     createBodies(mars, RenderBodyAs.Body, Phobos, RenderBodyAs.Point, RenderBodyAs.Orbit, Deimos, RenderBodyAs.Point, RenderBodyAs.Orbit);
-    console.log(...mars.coordinates, ...mars.velocity);
     cam.put([
         0, -120, 90
     ])
-        .lookAt(mars)
-        .adjust(Math.PI * (45 / 180), // human naked eyes.
+        .see(mars)
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -229,12 +228,11 @@ const jupiterSys = async () => {
     ether = new Ether();
     const jupiter = new Body(Jupiter).center();
     createBodies(jupiter, RenderBodyAs.Body, Lo, RenderBodyAs.Orbit, Europa, RenderBodyAs.Orbit, Ganymede, RenderBodyAs.Orbit, Callisto, RenderBodyAs.Orbit);
-    const cameraCoords = [
+    cam.put([
         0, -1297, 900
-    ];
-    cam.put(cameraCoords)
-        .lookAt(jupiter)
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+    ])
+        .see(jupiter)
+        .perspective(Math.PI * (120 / 180), // human naked eyes.
     100, Infinity);
     run();
 };
@@ -248,8 +246,8 @@ const saturnSys = async () => {
     const enceladus = new Body(Enceladus);
     createBodies(saturn, RenderBodyAs.Body, RenderBodyAs.Rings, Mimas, RenderBodyAs.Orbit, Tethys, RenderBodyAs.Orbit, Dione, RenderBodyAs.Orbit, tian, RenderBodyAs.Orbit, rhea, RenderBodyAs.Orbit, enceladus, RenderBodyAs.Orbit, Iapetus, RenderBodyAs.Orbit);
     cam.put([0, -Rhea.aphelion, 300])
-        .lookAt(saturn)
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+        .see(saturn)
+        .perspective(Math.PI * (120 / 180), // human naked eyes.
     100, Infinity);
     run();
 };
@@ -260,8 +258,8 @@ const neptuneSys = async () => {
     const neptune = new Body(Neptune).center();
     createBodies(neptune, RenderBodyAs.Body, Proteus, RenderBodyAs.Orbit, Triton, RenderBodyAs.Orbit, Nereid, RenderBodyAs.Orbit);
     cam.put([0, -Proteus.semiMajorAxis, 10])
-        .lookAt(neptune)
-        .adjust(Math.PI * (120 / 180), // human naked eyes.
+        .see(neptune)
+        .perspective(Math.PI * (120 / 180), // human naked eyes.
     10, Infinity);
     run();
 };
@@ -294,31 +292,39 @@ const movingEarthWithSallites = () => {
     cam.put([
         0, -380, .1
     ]).up([0, 1, 0])
-        .lookAt(earth)
-        .adjust(Math.PI * (45 / 180), // human naked eyes.
+        .see(earth)
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
 const movingJupiterWithCallisto = () => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(10, 100);
+    ether = new Ether(10, 60);
     const sun = new Body(Sun).center();
     const jupiter = new Body(Jupiter);
     const callisto = new Body({
         ...Callisto,
         color: parseColor("#99af32")
     });
+    const ganymede = new Body({
+        ...Ganymede,
+        color: parseColor("#09fe10")
+    });
     callisto.framesCountOfOrbitFin = Infinity;
-    createBodies(sun, RenderBodyAs.Point, jupiter, RenderBodyAs.Point, callisto, RenderBodyAs.Point, RenderBodyAs.Orbit);
+    ganymede.framesCountOfOrbitFin = Infinity;
+    createBodies(sun, RenderBodyAs.Point, jupiter, RenderBodyAs.Point, callisto, RenderBodyAs.Point, RenderBodyAs.Orbit, ganymede, RenderBodyAs.Point, RenderBodyAs.Orbit);
     jupiter.addSatellite(callisto);
+    jupiter.addSatellite(ganymede);
     const at = [0, 0, 0];
     const norm = vec3.normalize([0, 0, 0], jupiter.coordinates);
     vec3.scale(at, norm, 5 * AU);
     cam.put(at)
-        .up([0, H / W, -1])
-        .lookAt(jupiter.coordinates)
-        .adjust(Math.PI * (45 / 180), // human naked eyes.
+        .up([0, 0, 1])
+        .see(jupiter)
+        .offset([-40000, 40000 * H / W, 0])
+        .rotateAboutZ(-2 * RAD_PER_DEGREE)
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -337,8 +343,8 @@ const single = async (name) => {
         createBodies(pluto, RenderBodyAs.Body);
     }
     cam.put([0, -inf.radius * 4, inf.radius * .68])
-        .lookAt(pluto)
-        .adjust(Math.PI * (45 / 180), // human naked eyes.
+        .see(pluto)
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -369,8 +375,8 @@ const compare = (...infs) => {
     createBodies(...bodies);
     cam.put([0, -FAR, .1])
         .up([0, 0, 1])
-        .lookAt([0, 0, 0])
-        .adjust(Math.PI * (45 / 180), // human naked eyes.
+        .see([0, 0, 0])
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };

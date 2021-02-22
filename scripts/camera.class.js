@@ -2,56 +2,66 @@ import { Body } from "./body.class";
 const { vec3 } = glMatrix;
 export class Camera {
     constructor(aspectRatio) {
-        this._towards = null;
         this.lookTo = [0, 0, 0];
         this.upTo = [0, 1, 0];
         this.viewMat = glMatrix.mat4.create();
         this.projectionMat = glMatrix.mat4.create();
         this.aspectRatio = aspectRatio;
     }
-    get towards() {
-        if (this._towards === null) {
-            this._towards = vec3.normalize([0, 0, 0], vec3.sub([0, 0, 0], this.lookTo, this.coord));
-        }
-        return this._towards;
-    }
     get far() {
         return vec3.distance(this.lookTo, this.coord);
     }
+    get z() {
+        return vec3.sub([0, 0, 0], this.lookTo, this.coord);
+    }
     put(coord) {
         this.coord = glMatrix.vec3.clone(coord);
-        this._towards = null;
         return this;
     }
     up(up) {
         this.upTo = glMatrix.vec3.clone(up);
         return this;
     }
-    moveBy(change, linear = false) {
+    see(to) {
         if (!this.coord)
             throw new Error("pls put the cam firstly.");
-        vec3.add(this.coord, this.coord, change);
+        this.lookTo = to instanceof Body ? glMatrix.vec3.clone(to.coordinates) : glMatrix.vec3.clone(to);
         this.setViewMat();
-        if (linear)
-            return;
-        this._towards = null;
+        return this;
     }
-    lookAt(to) {
-        if (!this.coord)
-            throw new Error("pls put the cam firstly.");
-        this.lookTo = to instanceof Body ? to.coordinates : to;
-        this._towards = null;
-        this.setViewMat();
+    rotateAboutZ(rad) {
+        glMatrix.mat4.rotate(this.viewMat, this.viewMat, rad, this.z);
         return this;
     }
     setViewMat() {
         glMatrix.mat4.lookAt(this.viewMat, this.coord, this.lookTo, this.upTo);
+        this.viewMat_t = glMatrix.mat4.create();
+        glMatrix.mat4.invert(this.viewMat_t, this.viewMat);
     }
-    rotate(rad) {
-        glMatrix.mat4.rotateZ(this.viewMat, this.viewMat, rad);
-    }
-    adjust(fovy, near, far) {
+    perspective(fovy, near, far) {
         glMatrix.mat4.perspective(this.projectionMat, fovy, this.aspectRatio, near, far);
         return this;
+    }
+    /**
+     * @param v V is the coordinates in camera space
+     */
+    offset(v) {
+        const wc = this.toWorldSpace(v, true);
+        vec3.add(this.lookTo, this.lookTo, wc);
+        this.see(this.lookTo);
+        return this;
+    }
+    /**
+     * transforms a coordinates of world into camera space.
+     */
+    toCamSpace(coord) {
+        return glMatrix.vec3.transformMat4([0, 0, 0], coord, this.viewMat);
+    }
+    toWorldSpace(coord, justRotation = false) {
+        const v = glMatrix.vec3.transformMat4([0, 0, 0], coord, this.viewMat_t);
+        if (justRotation) {
+            glMatrix.vec3.sub(v, v, this.coord);
+        }
+        return v;
     }
 }
