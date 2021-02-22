@@ -1,4 +1,4 @@
-import { isPowerOfTwo } from "./utils.js"
+import { isPowerOfTwo } from "./utils";
 export class ObjectProgram {
     constructor(gl, cam, ether) {
         this.gl = gl;

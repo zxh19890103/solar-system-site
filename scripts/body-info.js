@@ -1,5 +1,5 @@
-import { AU, RAD_PER_DEGREE } from "./constants.js"
-import { approximates, parseColor, randColor } from "./utils.js"
+import { AU, RAD_PER_DEGREE } from "./constants";
+import { approximates, parseColor, randColor } from "./utils";
 const COLORS = {
     grey: [128, 128, 128],
     brown: [165, 42, 42],
@@ -70,7 +70,7 @@ export const Earth = {
     peribelion: 147095,
     semiMajorAxis: 149598.023,
     avatar: "/nineplanets-org/earth.png",
-    map: "/maps/earth-1000x500.jpg",
+    map: "/maps/earth-1600x800.jpg",
     color: composeColors(COLORS.blue, COLORS.green),
     mass: 5.97237,
     radius: 6.371,
@@ -468,6 +468,33 @@ export const Nereid = {
     radius: approximates(357, 13) / 2 * .001,
     inclination: 0 * RAD_PER_DEGREE,
     ref: Neptune
+};
+// mars'
+export const Phobos = {
+    name: "Phobos",
+    aphelion: 9.51758,
+    peribelion: 9.23442,
+    semiMajorAxis: 9.376,
+    avatar: "/nineplanets-org/440px-Phobos_colour_2008.jpg",
+    map: "",
+    color: randColor(),
+    mass: 1.0659 * Math.pow(10, -8),
+    radius: 11.2667 * .001,
+    inclination: 1.093 * RAD_PER_DEGREE,
+    ref: Mars
+};
+export const Deimos = {
+    name: "Deimos",
+    aphelion: 23.4709,
+    peribelion: 23.4555,
+    semiMajorAxis: 23.4632,
+    avatar: "/nineplanets-org/440px-Deimos-MRO.jpg",
+    map: "",
+    color: randColor(),
+    mass: 1.4762 * Math.pow(10, -9),
+    radius: approximates(6.2, 0.18) * .001,
+    inclination: 0.93 * RAD_PER_DEGREE,
+    ref: Mars
 };
 export const Bodies13 = {
     Sun,

@@ -15,20 +15,20 @@
  * 1. N vertices
  * 2. the center.
  */
-import { Ceres, Earth, Jupiter, Mars, Mercury, Neptune, Saturn, Sun, Uranus, Venus, Eris, Pluto, Halley, Tempel1, Holmes, HaleBopp, Luna, Lo, Europa, Ganymede, Callisto, Titan, Rhea, Enceladus, Mimas, Tethys, Dione, Iapetus, Proteus, Triton, Nereid, Bodies13 } from "./body-info.js"
-import { BodyProgram } from "./body-program.class.js"
-import { Body, RenderBodyAs } from "./body.class.js"
-import { Camera } from "./camera.class.js"
-import { CircleProgram } from "./circle-program.class.js"
-import { Ether } from "./ether.js"
-import { PointProgram } from "./point-program.class.js"
-import { BallProgram } from "./ball-program.class.js"
-import { OrbitProgram } from "./orbit-program.class.js"
-import { RingsProgram } from "./rings-program.class.js"
-import { AU, RAD_PER_DEGREE } from "./constants.js"
-import { TailProgram } from "./tail-program.class.js"
+import { Ceres, Earth, Jupiter, Mars, Mercury, Neptune, Saturn, Sun, Uranus, Venus, Eris, Pluto, Halley, Tempel1, Holmes, HaleBopp, Luna, Lo, Europa, Ganymede, Callisto, Titan, Rhea, Enceladus, Mimas, Tethys, Dione, Iapetus, Proteus, Triton, Nereid, Bodies13, Phobos, Deimos } from "./body-info";
+import { BodyProgram } from "./body-program.class";
+import { Body, RenderBodyAs } from "./body.class";
+import { Camera } from "./camera.class";
+import { CircleProgram } from "./circle-program.class";
+import { Ether } from "./ether";
+import { PointProgram } from "./point-program.class";
+import { BallProgram } from "./ball-program.class";
+import { OrbitProgram } from "./orbit-program.class";
+import { RingsProgram } from "./rings-program.class";
+import { AU, RAD_PER_DEGREE } from "./constants";
+import { TailProgram } from "./tail-program.class";
 import "../env.js";
-import { parseColor } from "./utils.js"
+import { parseColor } from "./utils";
 const { vec3 } = glMatrix;
 let W = 0;
 let H = 0;
@@ -178,7 +178,7 @@ const comets = async () => {
 const earthSys = async () => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(80, 5);
+    ether = new Ether(10, 5);
     const earth = new Body(Earth).center();
     const luna = new Body(Luna);
     const satellite = new Body({
@@ -201,9 +201,24 @@ const earthSys = async () => {
     });
     createBodies(earth, RenderBodyAs.Body, luna, RenderBodyAs.Body, RenderBodyAs.Orbit, satellite, RenderBodyAs.Point, RenderBodyAs.Orbit, satellite2, RenderBodyAs.Point, RenderBodyAs.Orbit);
     cam.put([
-        0, -80, 1
+        0, -200, 1
     ])
         .lookAt(earth)
+        .adjust(Math.PI * (45 / 180), // human naked eyes.
+    .1, Infinity);
+    run();
+};
+const marsSys = async () => {
+    setupGLContext();
+    cam = new Camera(W / H);
+    ether = new Ether(10, 5);
+    const mars = new Body(Mars).center();
+    createBodies(mars, RenderBodyAs.Body, Phobos, RenderBodyAs.Point, RenderBodyAs.Orbit, Deimos, RenderBodyAs.Point, RenderBodyAs.Orbit);
+    console.log(...mars.coordinates, ...mars.velocity);
+    cam.put([
+        0, -120, 90
+    ])
+        .lookAt(mars)
         .adjust(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
@@ -217,10 +232,6 @@ const jupiterSys = async () => {
     const cameraCoords = [
         0, -1297, 900
     ];
-    // lo.face(cameraCoords)
-    // europa.face(cameraCoords)
-    // ganymede.face(cameraCoords)
-    // callisto.face(cameraCoords)
     cam.put(cameraCoords)
         .lookAt(jupiter)
         .adjust(Math.PI * (120 / 180), // human naked eyes.
@@ -291,7 +302,7 @@ const movingEarthWithSallites = () => {
 const movingJupiterWithCallisto = () => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(10, 400);
+    ether = new Ether(10, 100);
     const sun = new Body(Sun).center();
     const jupiter = new Body(Jupiter);
     const callisto = new Body({
@@ -299,14 +310,15 @@ const movingJupiterWithCallisto = () => {
         color: parseColor("#99af32")
     });
     callisto.framesCountOfOrbitFin = Infinity;
-    createBodies(sun, RenderBodyAs.Point, jupiter, RenderBodyAs.Point, callisto, RenderBodyAs.Point);
+    createBodies(sun, RenderBodyAs.Point, jupiter, RenderBodyAs.Point, callisto, RenderBodyAs.Point, RenderBodyAs.Orbit);
     jupiter.addSatellite(callisto);
     const at = [0, 0, 0];
     const norm = vec3.normalize([0, 0, 0], jupiter.coordinates);
-    vec3.scale(at, norm, 4 * AU);
-    cam.put(at).up([0, 0, -1])
+    vec3.scale(at, norm, 5 * AU);
+    cam.put(at)
+        .up([0, H / W, -1])
         .lookAt(jupiter.coordinates)
-        .adjust(Math.PI * (100 / 180), // human naked eyes.
+        .adjust(Math.PI * (45 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -469,6 +481,9 @@ const main = () => {
                 break;
             case "earth":
                 earthSys();
+                break;
+            case "mars":
+                marsSys();
                 break;
             case "neptune":
                 neptuneSys();

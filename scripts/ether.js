@@ -1,11 +1,9 @@
-import { Bodies13, Sun } from "./body-info.js"
-import { AU, SECONDS_IN_A_DAY } from "./constants.js"
-import { range } from "./utils.js"
+import { Bodies13, Sun } from "./body-info";
+import { AU, SECONDS_IN_A_DAY } from "./constants";
+import { range } from "./utils";
 const GRAVITY_CONST = 6.67430 * 0.00001; // x 10 ^ -5
 const { vec3 } = glMatrix;
 const { cos, sin, PI, sqrt } = Math;
-// x10 ^ 6 passed.
-// console.log(1000000 * GRAVITY_CONST * Earth.mass / (Earth.radius * Earth.radius))
 export class Ether {
     constructor(uft = 10, rp = 100, moveOff = false) {
         this.bodies = [];
@@ -35,7 +33,7 @@ export class Ether {
         const buttons = document.createElement("div");
         buttons.className = "buttons";
         buttons.style.display = "none";
-        Array("solar", "earth", "jupiter", "saturn", "neptune", "comets", "compare", "moving", "moving2", ...Object.keys(Bodies13)).forEach((text, i) => {
+        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", "moving", "moving2", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;

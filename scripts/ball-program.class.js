@@ -1,5 +1,5 @@
-import { RenderBodyAs } from "./body.class.js"
-import { ObjectProgram } from "./program.class.js"
+import { RenderBodyAs } from "./body.class";
+import { ObjectProgram } from "./program.class";
 export class BallProgram extends ObjectProgram {
     get vertexShaderSource() {
         return "/shaders/ball.vert.glsl";
