@@ -6,6 +6,7 @@ export class Camera {
         this.upTo = [0, 1, 0];
         this.viewMat = glMatrix.mat4.create();
         this.projectionMat = glMatrix.mat4.create();
+        this.viewMat_t = glMatrix.mat4.create();
         this.aspectRatio = aspectRatio;
     }
     get far() {
@@ -31,11 +32,11 @@ export class Camera {
     }
     rotateAboutZ(rad) {
         glMatrix.mat4.rotate(this.viewMat, this.viewMat, rad, this.z);
+        glMatrix.mat4.invert(this.viewMat_t, this.viewMat);
         return this;
     }
     setViewMat() {
         glMatrix.mat4.lookAt(this.viewMat, this.coord, this.lookTo, this.upTo);
-        this.viewMat_t = glMatrix.mat4.create();
         glMatrix.mat4.invert(this.viewMat_t, this.viewMat);
     }
     perspective(fovy, near, far) {

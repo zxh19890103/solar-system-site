@@ -33,7 +33,7 @@ export class Ether {
         const buttons = document.createElement("div");
         buttons.className = "buttons";
         buttons.style.display = "none";
-        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", "moving", "moving2", ...Object.keys(Bodies13)).forEach((text, i) => {
+        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", "moving", "moving2", "moving3", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
