@@ -1,5 +1,5 @@
-import { AU, CIRCLE_RAD, RADIUS_SCALE } from "./constants";
-import { parseColor, randColor, range } from "./utils";
+import { AU, CIRCLE_RAD, RADIUS_SCALE } from "./constants.js"
+import { parseColor, randColor, range } from "./utils.js"
 const { PI, cos, sin } = Math;
 const HALF_PI = PI / 2;
 const DOUBLE_PI = 2 * PI;

@@ -15,20 +15,20 @@
  * 1. N vertices
  * 2. the center.
  */
-import { Ceres, Earth, Jupiter, Mars, Mercury, Neptune, Saturn, Sun, Uranus, Venus, Eris, Pluto, Halley, Tempel1, Holmes, HaleBopp, Luna, Lo, Europa, Ganymede, Callisto, Titan, Rhea, Enceladus, Mimas, Tethys, Dione, Iapetus, Proteus, Triton, Nereid, Bodies13, Phobos, Deimos } from "./body-info";
-import { BodyProgram } from "./body-program.class";
-import { Body, RenderBodyAs } from "./body.class";
-import { Camera } from "./camera.class";
-import { CircleProgram } from "./circle-program.class";
-import { Ether } from "./ether";
-import { PointProgram } from "./point-program.class";
-import { BallProgram } from "./ball-program.class";
-import { OrbitProgram } from "./orbit-program.class";
-import { RingsProgram } from "./rings-program.class";
-import { AU, RAD_PER_DEGREE } from "./constants";
-import { TailProgram } from "./tail-program.class";
+import { Ceres, Earth, Jupiter, Mars, Mercury, Neptune, Saturn, Sun, Uranus, Venus, Eris, Pluto, Halley, Tempel1, Holmes, HaleBopp, Luna, Lo, Europa, Ganymede, Callisto, Titan, Rhea, Enceladus, Mimas, Tethys, Dione, Iapetus, Proteus, Triton, Nereid, Bodies13, Phobos, Deimos } from "./body-info.js"
+import { BodyProgram } from "./body-program.class.js"
+import { Body, RenderBodyAs } from "./body.class.js"
+import { Camera } from "./camera.class.js"
+import { CircleProgram } from "./circle-program.class.js"
+import { Ether } from "./ether.js"
+import { PointProgram } from "./point-program.class.js"
+import { BallProgram } from "./ball-program.class.js"
+import { OrbitProgram } from "./orbit-program.class.js"
+import { RingsProgram } from "./rings-program.class.js"
+import { AU, RAD_PER_DEGREE } from "./constants.js"
+import { TailProgram } from "./tail-program.class.js"
 import "../env.js";
-import { parseColor } from "./utils";
+import { parseColor } from "./utils.js"
 const { vec3 } = glMatrix;
 let W = 0;
 let H = 0;

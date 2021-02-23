@@ -1,4 +1,4 @@
-import { Body } from "./body.class";
+import { Body } from "./body.class.js"
 const { vec3 } = glMatrix;
 export class Camera {
     constructor(aspectRatio) {

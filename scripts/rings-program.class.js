@@ -1,5 +1,5 @@
-import { RenderBodyAs } from "./body.class";
-import { ObjectProgram } from "./program.class";
+import { RenderBodyAs } from "./body.class.js"
+import { ObjectProgram } from "./program.class.js"
 export class RingsProgram extends ObjectProgram {
     get vertexShaderSource() {
         return "/shaders/rings.vert.glsl";

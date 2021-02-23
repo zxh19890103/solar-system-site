@@ -1,6 +1,6 @@
-import { RenderBodyAs } from "./body.class";
-import { AU } from "./constants";
-import { ObjectProgram } from "./program.class";
+import { RenderBodyAs } from "./body.class.js"
+import { AU } from "./constants.js"
+import { ObjectProgram } from "./program.class.js"
 export class TailProgram extends ObjectProgram {
     get vertexShaderSource() {
         return "/shaders/tail.vert.glsl";
