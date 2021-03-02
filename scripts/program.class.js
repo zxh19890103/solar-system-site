@@ -119,8 +119,8 @@ export class ObjectProgram {
     setUniform3fv(name, value) {
         const { gl, program } = this;
         const loc = gl.getUniformLocation(program, name);
-        return () => {
-            gl.uniform3fv(loc, value);
+        return (nextValue) => {
+            gl.uniform3fv(loc, nextValue ?? value);
         };
     }
     setUniform4fv(name, value) {
@@ -156,11 +156,13 @@ export class ObjectProgram {
         if (needModel) {
             m = this.setUniformMatrix4fv("model", body.modelMat);
         }
-        this.setUniformMatrix4fv("view", cam.viewMat)();
-        this.setUniformMatrix4fv("projection", cam.projectionMat)();
+        const v = this.setUniformMatrix4fv("view", cam.viewMat);
+        const p = this.setUniformMatrix4fv("projection", cam.projectionMat);
         return () => {
             l && l();
             m && m();
+            v();
+            p();
         };
     }
 }

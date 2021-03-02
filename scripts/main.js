@@ -15,7 +15,7 @@
  * 1. N vertices
  * 2. the center.
  */
-import { Ceres, Earth, Jupiter, Mars, Mercury, Neptune, Saturn, Sun, Uranus, Venus, Eris, Pluto, Halley, Tempel1, Holmes, HaleBopp, Luna, Lo, Europa, Ganymede, Callisto, Titan, Rhea, Enceladus, Mimas, Tethys, Dione, Iapetus, Proteus, Triton, Nereid, Bodies13, Phobos, Deimos } from "./body-info.js"
+import { Earth, Jupiter, Mars, Mercury, Neptune, Saturn, Sun, Halley, Tempel1, Holmes, HaleBopp, Luna, Lo, Europa, Ganymede, Callisto, Titan, Rhea, Enceladus, Mimas, Tethys, Dione, Iapetus, Proteus, Triton, Nereid, Bodies13, Phobos, Deimos, KamoOalewa } from "./body-info.js"
 import { BodyProgram } from "./body-program.class.js"
 import { Body, RenderBodyAs } from "./body.class.js"
 import { Camera } from "./camera.class.js"
@@ -120,7 +120,7 @@ const resizeCanvasToDisplaySize = () => {
     return needResize;
 };
 const run = async () => {
-    const distance = cam.far;
+    const distance = cam.farFromTarget;
     if (distance / AU > .099) {
         ether.writeLine(`You're ${(distance / AU).toFixed(6)} AU far from the target body.`);
     }
@@ -149,7 +149,16 @@ const solar = async () => {
     cam = new Camera(W / H);
     ether = new Ether(1000, 50);
     const sun = new Body(Sun);
-    createBodies(sun, RenderBodyAs.Point, Mercury, RenderBodyAs.Orbit, Venus, RenderBodyAs.Orbit, Earth, RenderBodyAs.Orbit, Mars, RenderBodyAs.Orbit, Jupiter, RenderBodyAs.Point, RenderBodyAs.Orbit, Saturn, RenderBodyAs.Point, RenderBodyAs.Orbit, Uranus, RenderBodyAs.Orbit, Neptune, RenderBodyAs.Point, RenderBodyAs.Orbit, Ceres, RenderBodyAs.Orbit, Eris, RenderBodyAs.Orbit, Pluto, RenderBodyAs.Orbit);
+    const kamoOalewa = new Body(KamoOalewa);
+    kamoOalewa.setAngleOnXY(0);
+    const earth = new Body(Earth);
+    earth.setAngleOnXY(0);
+    createBodies(sun, RenderBodyAs.Point, 
+    // Mercury,
+    // RenderBodyAs.Orbit,
+    // Venus,
+    // RenderBodyAs.Orbit,
+    earth, RenderBodyAs.Point, RenderBodyAs.Orbit, kamoOalewa, RenderBodyAs.Point, RenderBodyAs.Orbit);
     cam.put([
         0, -Mars.aphelion, Mercury.aphelion
     ])
@@ -244,10 +253,10 @@ const saturnSys = async () => {
     const tian = new Body(Titan);
     const rhea = new Body(Rhea);
     const enceladus = new Body(Enceladus);
-    createBodies(saturn, RenderBodyAs.Body, RenderBodyAs.Rings, Mimas, RenderBodyAs.Orbit, Tethys, RenderBodyAs.Orbit, Dione, RenderBodyAs.Orbit, tian, RenderBodyAs.Orbit, rhea, RenderBodyAs.Orbit, enceladus, RenderBodyAs.Orbit, Iapetus, RenderBodyAs.Orbit);
-    cam.put([0, -Rhea.aphelion, 300])
+    createBodies(saturn, RenderBodyAs.Body, Mimas, RenderBodyAs.Orbit, Tethys, RenderBodyAs.Orbit, Dione, RenderBodyAs.Orbit, tian, RenderBodyAs.Orbit, rhea, RenderBodyAs.Orbit, enceladus, RenderBodyAs.Orbit, Iapetus, RenderBodyAs.Orbit);
+    cam.put([0, -Rhea.aphelion * 2, 300])
         .see(saturn)
-        .perspective(Math.PI * (120 / 180), // human naked eyes.
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     100, Infinity);
     run();
 };
@@ -257,9 +266,9 @@ const neptuneSys = async () => {
     ether = new Ether(10, 10);
     const neptune = new Body(Neptune).center();
     createBodies(neptune, RenderBodyAs.Body, Proteus, RenderBodyAs.Orbit, Triton, RenderBodyAs.Orbit, Nereid, RenderBodyAs.Orbit);
-    cam.put([0, -Proteus.semiMajorAxis, 10])
+    cam.put([0, -Proteus.semiMajorAxis * 4, 10])
         .see(neptune)
-        .perspective(Math.PI * (120 / 180), // human naked eyes.
+        .perspective(Math.PI * (45 / 180), // human naked eyes.
     10, Infinity);
     run();
 };
@@ -319,13 +328,13 @@ const movingJupiterWithCallisto = () => {
     const at = [0, 0, 0];
     const norm = vec3.normalize([0, 0, 0], jupiter.coordinates);
     vec3.scale(at, norm, 5 * AU);
-    const h = vec3.dist(at, jupiter.coordinates) * Math.tan((45 / 2) * RAD_PER_DEGREE);
+    const h = vec3.dist(at, jupiter.coordinates) * Math.tan((20 / 2) * RAD_PER_DEGREE);
     const w = cam.aspectRatio * h;
     cam.put(at)
         .up([0, 0, 1])
         .see(jupiter)
         .offset([-w, 0, 0])
-        .perspective(Math.PI * (45 / 180), // human naked eyes.
+        .perspective(Math.PI * (20 / 180), // human naked eyes.
     .1, Infinity);
     run();
 };
@@ -353,17 +362,17 @@ const single = async (name) => {
         inf = Earth;
     cam = new Camera(W / H);
     ether = new Ether(10, 1);
-    const pluto = new Body(inf).center();
+    const body = new Body(inf).center();
     if (inf.rings) {
-        createBodies(pluto, RenderBodyAs.Body, RenderBodyAs.Rings);
+        createBodies(body, RenderBodyAs.Body, RenderBodyAs.Rings);
     }
     else {
-        createBodies(pluto, RenderBodyAs.Body);
+        createBodies(body, RenderBodyAs.Body);
     }
-    cam.put([0, -inf.radius * 4, inf.radius * .68])
-        .see(pluto)
+    cam.put([0, -inf.radius * 5, inf.radius * .68])
+        .see(body)
         .perspective(Math.PI * (45 / 180), // human naked eyes.
-    .1, Infinity);
+    inf.radius * 4, Infinity);
     run();
 };
 const compare = (...infs) => {
@@ -477,14 +486,47 @@ const planets01 = () => {
     }
     compare(...bodies);
 };
+const seeBodyFromEarth = (lookatBody) => {
+    setupGLContext();
+    cam = new Camera(W / H);
+    ether = new Ether(1, 1);
+    const sun = new Body(Sun);
+    const earth = new Body(Earth);
+    const luna = new Body(Luna);
+    const dododo = Object.entries(Bodies13).map(([k, inf]) => {
+        return [
+            k === "Sun" ? sun : k === "Earth" ? earth : k === "Luna" ? luna : new Body(inf),
+            k === lookatBody ? RenderBodyAs.Body : RenderBodyAs.Point
+        ];
+    }).flat();
+    createBodies(...dododo);
+    earth.addSatellite(luna);
+    const progs = ether.bodies.map(b => b.programs).flat().filter(f => f instanceof BodyProgram);
+    progs.forEach(prog => {
+        prog.setLightingSource(sun);
+    });
+    console.log(progs.length);
+    const target = ether.bodies.find(b => b.inf.name === lookatBody);
+    cam.put(earth.coordinates)
+        .up([0, 0, 1])
+        .see(target)
+        .perspective(Math.PI * (2 / 180), // human naked eyes.
+    2 * Earth.radius, Infinity)
+        .render(ether.bodies);
+    run();
+};
 const main = () => {
-    const match = location.search.match(/\?sys=([a-zA-Z0-9]+)/);
-    if (match === null) {
+    const match = new URLSearchParams(location.search);
+    if (!match.get("sys")) {
         single("Earth");
     }
     else {
-        const [, sys] = match;
+        const sys = match.get("sys");
         switch (sys) {
+            case "observe":
+                const targetBody = match.get("body");
+                seeBodyFromEarth(targetBody);
+                break;
             case "moving":
                 movingEarthWithSallites();
                 break;

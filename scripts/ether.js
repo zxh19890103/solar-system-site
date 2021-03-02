@@ -1,6 +1,5 @@
 import { Bodies13, Sun } from "./body-info.js"
 import { AU, SECONDS_IN_A_DAY } from "./constants.js"
-import { range } from "./utils.js"
 const GRAVITY_CONST = 6.67430 * 0.00001; // x 10 ^ -5
 const { vec3 } = glMatrix;
 const { cos, sin, PI, sqrt } = Math;
@@ -33,7 +32,7 @@ export class Ether {
         const buttons = document.createElement("div");
         buttons.className = "buttons";
         buttons.style.display = "none";
-        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", "moving", "moving2", "moving3", ...Object.keys(Bodies13)).forEach((text, i) => {
+        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", "observe", "moving", "moving2", "moving3", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
@@ -56,7 +55,7 @@ export class Ether {
         if (this.bodies.includes(b))
             return;
         const inf = b.inf;
-        const angleOnXY = range(0, PI * 2);
+        const angleOnXY = b.angleOnXY;
         if (b.coordinates === undefined) {
             const xy = inf.aphelion * cos(inf.inclination);
             b.coordinates = [
@@ -82,7 +81,7 @@ export class Ether {
         this.bodies.push(b);
         const rgba = [].map.call(b.inf.color, c => 0 ^ c * 255);
         if (this.moveOff) {
-            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> aphelion: ${(b.inf.aphelion / AU).toFixed(2)} AU; size: ${(b.inf.radius * 2).toFixed(2)} (10^3 km); rotation period: ${b.inf.rotationPeriod} days`);
+            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> aphelion: ${(b.inf.aphelion / AU).toFixed(2)} AU; size: ${(b.inf.radius * 2).toFixed(2)} (10^3 km); rotation period: ${b.inf.rotationPeriod.toFixed(3)} days`);
             return b;
         }
         if (vec3.len(b.velocity) === 0) {
@@ -194,7 +193,12 @@ export class Ether {
         let m = 0;
         let exp = "";
         while (m = overs.shift()) {
-            exp = `${rem % m}${units.shift()}${exp}`;
+            if (rem % m === 0) {
+                units.shift();
+            }
+            else {
+                exp = `${rem % m}${units.shift()}${exp}`;
+            }
             rem = 0 ^ (rem / m);
             if (rem === 0)
                 break;

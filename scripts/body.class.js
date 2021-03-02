@@ -17,6 +17,7 @@ export var RenderBodyAs;
 export class Body {
     constructor(inf, at, velocity) {
         this.coordinates = [0, 0, 0];
+        this.angleOnXY = range(0, PI * 2);
         this.velocity = [0, 0, 0];
         this.colors = [];
         this.orbitalCoordinateCount = 0;
@@ -33,6 +34,9 @@ export class Body {
     }
     set RotationSpeed(rs) {
         this.rotationSpeed = rs;
+    }
+    setAngleOnXY(value) {
+        this.angleOnXY = value;
     }
     useProgram(prog) {
         prog.setBody(this);
@@ -219,7 +223,7 @@ export class Body {
         for (; r < r1; r += .1) {
             const color = getColor();
             for (let a = 0; a < CIRCLE_RAD; a += .17) {
-                let n = 0 ^ Math.random() * 5;
+                let n = 0 ^ Math.random() * 3;
                 while (n--) {
                     const rr = r + Math.random() * 1.2;
                     const ra = a + Math.random() * .3;
