@@ -87,12 +87,12 @@ export class Camera {
         looktoInput.className = "form-control";
         looktoInput.type = "text";
         looktoInput.placeholder = "Look At";
+        looktoInput.value = this.lookTo.map(x => 0 ^ x).join(",");
         looktoInput.addEventListener("change", (ev) => {
             const target = ev.target;
             if (!/^\\d+,\d+,\d+\$/.test(target.value))
                 return;
             const lookat = JSON.parse(target.value);
-            console.log(lookat);
             this.see(lookat);
         });
         form.appendChild(looktoInput);
@@ -113,6 +113,7 @@ export class Camera {
         perspectiveInput.className = "form-control";
         perspectiveInput.type = "text";
         perspectiveInput.placeholder = "FOV-Y";
+        perspectiveInput.value = (0 ^ (this.fovy / RAD_PER_DEGREE)).toString();
         perspectiveInput.addEventListener("change", (ev) => {
             const target = ev.target;
             if (!/^[\.\d]+$/.test(target.value))

@@ -525,7 +525,7 @@ const main = () => {
         switch (sys) {
             case "observe":
                 const targetBody = match.get("body");
-                seeBodyFromEarth(targetBody);
+                seeBodyFromEarth(targetBody || "Luna");
                 break;
             case "moving":
                 movingEarthWithSallites();
