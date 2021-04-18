@@ -32,7 +32,9 @@ export class Ether {
         const buttons = document.createElement("div");
         buttons.className = "buttons";
         buttons.style.display = "none";
-        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", "observe", "moving", "moving2", "moving3", ...Object.keys(Bodies13)).forEach((text, i) => {
+        Array("solar", "earth", "mars", "jupiter", "saturn", "neptune", "comets", "compare", 
+        // "observe",
+        "moving", "moving2", "moving3", ...Object.keys(Bodies13)).forEach((text, i) => {
             const a = document.createElement("a");
             a.href = `/?sys=${text}`;
             a.innerText = i < 6 ? (text + " sys") : text;
@@ -81,7 +83,7 @@ export class Ether {
         this.bodies.push(b);
         const rgba = [].map.call(b.inf.color, c => 0 ^ c * 255);
         if (this.moveOff) {
-            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> aphelion: ${(b.inf.aphelion / AU).toFixed(2)} AU; size: ${(b.inf.radius * 2).toFixed(2)} (10^3 km); rotation period: ${b.inf.rotationPeriod.toFixed(3)} days`);
+            this.writeLine(`<span style="color: rgba(${rgba.join(',')})">${inf.name}</span> a= ${(b.inf.aphelion / AU).toFixed(2)} au; r= ${(b.inf.radius * 1000).toFixed(2)} km; rop= ${b.inf.rotationPeriod.toFixed(3)} days`);
             return b;
         }
         if (vec3.len(b.velocity) === 0) {
@@ -104,24 +106,6 @@ export class Ether {
             frames.push(prog.boot());
         }
         return frames;
-    }
-    computesFieldIntensityFromBody(target, from) {
-        const r = vec3.distance(target.coordinates, from.coordinates);
-        const g = (GRAVITY_CONST * from.inf.mass) / (r * r);
-        const vec = vec3.create();
-        vec3.subtract(vec, from.coordinates, target.coordinates);
-        vec3.normalize(vec, vec);
-        const fi = vec3.scale(vec, vec, g);
-        return fi;
-    }
-    computesFieldIntensity(target) {
-        const fi = vec3.create();
-        for (const from of this.bodies) {
-            if (from === target)
-                continue;
-            vec3.add(fi, fi, this.computesFieldIntensityFromBody(target, from));
-        }
-        return fi;
     }
     move() {
         if (this.moveOff)
@@ -149,25 +133,6 @@ export class Ether {
             }
             b.translates();
         }
-    }
-    move_legacy(b) {
-        if (this.moveOff)
-            return;
-        let n = this.renderPeriod;
-        while (n--) {
-            this._move(b);
-        }
-        b.translates();
-    }
-    _move(b) {
-        const ds = vec3.scale([0, 0, 0], b.velocity, this.unitOfTime);
-        const fi = this.computesFieldIntensity(b);
-        const dv = vec3.scale([0, 0, 0], fi, this.unitOfTime);
-        // velocity changes
-        vec3.add(b.velocity, b.velocity, dv);
-        const ds1 = vec3.scale([0, 0, 0], dv, .5 * this.unitOfTime);
-        vec3.add(ds, ds, ds1);
-        vec3.add(b.coordinates, b.coordinates, ds);
     }
     computesOrbitSpeedOnR(sma, r, ref) {
         if (sma === 0)

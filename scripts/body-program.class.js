@@ -1,6 +1,6 @@
 import { RenderBodyAs } from "./body.class.js"
 import { ObjectProgram } from "./program.class.js"
-const { vec3 } = glMatrix;
+const { vec3, mat4 } = glMatrix;
 export class BodyProgram extends ObjectProgram {
     constructor() {
         super(...arguments);
@@ -13,30 +13,46 @@ export class BodyProgram extends ObjectProgram {
         return "/shaders/body.frag.glsl";
     }
     async setup() {
-        this.log("initializing...");
         const gl = this.gl;
         this.tex = await this.loadTexture(gl, this.body.inf.map);
         await super.setup();
-        this.log("initialized");
     }
     setLightingSource(body) {
         this.lightSource = body;
     }
     boot() {
-        const { gl, body, ether } = this;
+        const { gl, body } = this;
         gl.useProgram(this.program);
         body.make(RenderBodyAs.Body);
+        const { axialTilt, inclination } = body.inf;
+        glMatrix.mat4.rotate(body.localMat, body.localMat, inclination, [Math.cos(body.angleOnXY), Math.sin(body.angleOnXY), 0]);
+        glMatrix.mat4.rotate(body.localMat, body.localMat, axialTilt, [1, 0, 0]);
         const setVertices = this.setFloat32Attrib("aVertex", body.vertices, 3);
         const setTexCoords = this.setFloat32Attrib("aVertexTexCoord", body.texCoords, 2);
         const setNormals = this.setFloat32Attrib("aVertexNormal", body.normals, 3);
-        this.setUniform3fv("uAmbientLight", [.02, .02, .02])();
+        this.setUniform3fv("uAmbientLight", [.04, .04, .04])();
         this.setUniform3fv("uDirectionalLightColor", [1, 1, 1])();
         const lightDir = [0, 0, 0];
         const calculatesLightDir = () => {
-            vec3.normalize(lightDir, vec3.sub(lightDir, body.coordinates, this.lightSource ? this.lightSource.coordinates : this.cam.coord));
+            vec3.normalize(lightDir, [0, 0, 1]
+            // vec3.sub(
+            //   lightDir,
+            //   body.coordinates,
+            //   this.lightSource ? this.lightSource.coordinates : this.cam.coord
+            // )
+            );
         };
         calculatesLightDir();
         const setLightSource = this.setUniform3fv("uLightDirection", lightDir);
+        const normMatrix = m4.create();
+        const createNormMatrix = () => {
+            const mvMatrix = m4.create();
+            m4.multiply(mvMatrix, this.body.modelMat, this.body.localMat);
+            m4.multiply(mvMatrix, this.cam.viewMat, mvMatrix);
+            m4.invert(normMatrix, mvMatrix);
+            m4.transpose(normMatrix, normMatrix);
+        };
+        const setNormMatrix = this.setUniformMatrix4fv("norm_matrix", normMatrix);
         // just once.
         const uniform = this.setUniformLMVP();
         const setSampler = this.setUniformTexSampler();
@@ -53,6 +69,8 @@ export class BodyProgram extends ObjectProgram {
             setTexCoords();
             calculatesLightDir();
             setLightSource();
+            createNormMatrix();
+            setNormMatrix();
             uniform();
             gl.drawElements(TRIANGLES, indicesCount, UNSIGNED_SHORT, 0);
         };

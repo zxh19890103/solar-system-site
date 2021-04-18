@@ -10,6 +10,8 @@ export var RenderBodyAs;
     RenderBodyAs[RenderBodyAs["Circle"] = 20] = "Circle";
     RenderBodyAs[RenderBodyAs["Ball"] = 30] = "Ball";
     RenderBodyAs[RenderBodyAs["Body"] = 40] = "Body";
+    RenderBodyAs[RenderBodyAs["BodyColor"] = 41] = "BodyColor";
+    RenderBodyAs[RenderBodyAs["BodyShadow"] = 42] = "BodyShadow";
     RenderBodyAs[RenderBodyAs["Orbit"] = 50] = "Orbit";
     RenderBodyAs[RenderBodyAs["Rings"] = 60] = "Rings";
     RenderBodyAs[RenderBodyAs["Tails"] = 70] = "Tails";
@@ -62,6 +64,7 @@ export class Body {
     addSatellite(satellite) {
         glMatrix.vec3.transformMat4(satellite.coordinates, satellite.coordinates, this.localMat);
         glMatrix.vec3.transformMat4(satellite.coordinates, satellite.coordinates, this.modelMat);
+        satellite.translates();
         glMatrix.vec3.transformMat4(satellite.velocity, satellite.velocity, this.localMat);
         vec3.add(satellite.velocity, satellite.velocity, this.velocity);
     }
@@ -170,7 +173,7 @@ export class Body {
                 vertices.push(...makeVertex(lat + 1, lon));
                 vertices.push(...makeVertex(lat + 1, lon + 1));
                 const normal = vec3.create();
-                vec3.normalize(normal, makeVertex(lat + .5, lon + .5));
+                vec3.normalize(normal, makeVertex(lat, lon));
                 normals.push(...normal, ...normal, ...normal, ...normal);
                 const color = [0, 0, 0, 0];
                 colors.push(...color, ...color, ...color, ...color);
@@ -198,8 +201,8 @@ export class Body {
         const vertices = [];
         const colors = [];
         const { radius: R, rings } = this.inf;
-        const r0 = R + 10;
-        const r1 = R + 80;
+        const r0 = R + rings[0][1] / 1000;
+        const r1 = R + rings[rings.length - 1][1] / 1000;
         const min = rings[0][1];
         const span = rings[rings.length - 1][1] - min;
         const colorbands = rings.map(([color, r]) => {
@@ -223,7 +226,7 @@ export class Body {
         for (; r < r1; r += .1) {
             const color = getColor();
             for (let a = 0; a < CIRCLE_RAD; a += .17) {
-                let n = 0 ^ Math.random() * 3;
+                let n = 0 ^ Math.random() * 2;
                 while (n--) {
                     const rr = r + Math.random() * 1.2;
                     const ra = a + Math.random() * .3;

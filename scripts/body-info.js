@@ -36,7 +36,9 @@ export const Sun = {
     color: composeColors(COLORS.red),
     mass: 1.9885 * 1000000,
     radius: 696.342,
-    inclination: 0
+    inclination: 0,
+    axialTilt: 0,
+    rotationPeriod: 0
 };
 export const Mercury = {
     name: "Mercury",
@@ -49,7 +51,8 @@ export const Mercury = {
     mass: .33011,
     radius: 2.4397,
     inclination: 3.38 * RAD_PER_DEGREE,
-    rotationPeriod: 58.646
+    rotationPeriod: 58.646,
+    axialTilt: 0.034 * RAD_PER_DEGREE
 };
 export const Venus = {
     name: "Venus",
@@ -62,7 +65,8 @@ export const Venus = {
     mass: 4.8675,
     radius: 6.0518,
     inclination: 3.86 * RAD_PER_DEGREE,
-    rotationPeriod: -243.025
+    rotationPeriod: -243.025,
+    axialTilt: 177.36 * RAD_PER_DEGREE
 };
 export const Earth = {
     name: "Earth",
@@ -75,7 +79,8 @@ export const Earth = {
     mass: 5.97237,
     radius: 6.371,
     inclination: 7.155 * RAD_PER_DEGREE,
-    rotationPeriod: .99
+    rotationPeriod: .99,
+    axialTilt: 23.4392811 * RAD_PER_DEGREE
 };
 export const Mars = {
     name: "Mars",
@@ -88,7 +93,8 @@ export const Mars = {
     mass: .64171,
     radius: 3.3895,
     inclination: 5.65 * RAD_PER_DEGREE,
-    rotationPeriod: 1.025957
+    rotationPeriod: 1.025957,
+    axialTilt: 25.19 * RAD_PER_DEGREE
 };
 export const Jupiter = {
     name: "Jupiter",
@@ -101,8 +107,19 @@ export const Jupiter = {
     mass: 1.8982 * 1000,
     radius: 69.911,
     inclination: 6.09 * RAD_PER_DEGREE,
-    rotationPeriod: 9.925 / 24
+    rotationPeriod: 9.925 / 24,
+    axialTilt: 3.13 * RAD_PER_DEGREE
 };
+/**
+ * D Ring	66,900   –  74,510	7,500
+ * C Ring	74,658   –   92,000	17,500
+ * B Ring	92,000   –  117,580	25,500
+ * Cassini Division	117,580   –   122,170	4,700
+ * A ring	122,170   –   136,775	14,600
+ * Roche Division	136,775   –   139,380	2,600
+ * F Ring	140,180 (3)	30   –  500
+ * total width: 73283
+ */
 export const Saturn = {
     name: "Saturn",
     aphelion: 1514500,
@@ -115,17 +132,7 @@ export const Saturn = {
     radius: 58.232,
     inclination: 5.51 * RAD_PER_DEGREE,
     rotationPeriod: 10.5 / 24,
-    /**
-     * D Ring	66,900   –  74,510	7,500
-     * C Ring	74,658   –   92,000	17,500
-     * B Ring	92,000   –  117,580	25,500
-     * Cassini Division	117,580   –   122,170	4,700
-     * A ring	122,170   –   136,775	14,600
-     * Roche Division	136,775   –   139,380	2,600
-     * F Ring	140,180 (3)	30   –  500
-     *
-     * total width: 73283
-     */
+    axialTilt: 26.73 * RAD_PER_DEGREE,
     rings: [
         ['#000000', 66900],
         ['#1c1c1c', 74510],
@@ -150,7 +157,24 @@ export const Uranus = {
     mass: approximates(86.810, .013),
     radius: approximates(25362, 7) * .001,
     inclination: 6.48 * RAD_PER_DEGREE,
-    rotationPeriod: -17.2 / 24
+    rotationPeriod: -17.2 / 24,
+    axialTilt: 97.77 * RAD_PER_DEGREE,
+    /**
+     * 26840 – 34890
+     * 34890 – 37850
+     * 37000 – 39500
+     * 37850 – 41350
+     * ...
+     * 66100 – 69900
+     * ...
+     * 86000 – 103000
+     */
+    rings: [
+        ['#dbdf98', 66100],
+        ['#f8d7cb', 69900],
+        ['#a1aaa8', 86000],
+        ['#2d3f34', 103000]
+    ]
 };
 export const Neptune = {
     name: "Neptune",
@@ -163,7 +187,8 @@ export const Neptune = {
     mass: 102.413,
     radius: approximates(24.622, .019),
     inclination: 6.43 * RAD_PER_DEGREE,
-    rotationPeriod: 0.6713
+    rotationPeriod: 0.6713,
+    axialTilt: 28.32 * RAD_PER_DEGREE
 };
 export const Pluto = {
     name: "Pluto",
@@ -176,7 +201,8 @@ export const Pluto = {
     mass: approximates(1.303, .003) * .01,
     radius: approximates(1188.3, .8) * .001,
     inclination: 11.88 * RAD_PER_DEGREE,
-    rotationPeriod: 6.387230
+    rotationPeriod: 6.387230,
+    axialTilt: 122.53 * RAD_PER_DEGREE
 };
 export const Ceres = {
     name: "Ceres",
@@ -188,7 +214,8 @@ export const Ceres = {
     color: randColor(),
     mass: approximates(9.3835, .0001) * .0001,
     radius: .46973,
-    inclination: 0 * RAD_PER_DEGREE
+    inclination: (10.59406704 + Earth.inclination) * RAD_PER_DEGREE,
+    axialTilt: 4 * RAD_PER_DEGREE
 };
 export const Eris = {
     name: "Eris",
@@ -200,7 +227,8 @@ export const Eris = {
     color: randColor(),
     mass: approximates(1.6466, .0085) * .01,
     radius: approximates(1163, 6) * .001,
-    inclination: 44.040 * RAD_PER_DEGREE
+    inclination: 44.040 * RAD_PER_DEGREE,
+    axialTilt: 78 * RAD_PER_DEGREE
 };
 // Commets bellow
 export const Halley = {
@@ -263,9 +291,10 @@ export const Luna = {
     color: randColor(),
     mass: .07342,
     radius: 1.7374,
-    inclination: 0 * RAD_PER_DEGREE,
-    ref: Earth,
-    rotationPeriod: 27.321661
+    inclination: (5.145 + Earth.axialTilt) * RAD_PER_DEGREE,
+    rotationPeriod: 27.321661,
+    axialTilt: 6.687 * RAD_PER_DEGREE,
+    ref: Earth
 };
 export const KamoOalewa = {
     name: "469219 Kamoʻoalewa",

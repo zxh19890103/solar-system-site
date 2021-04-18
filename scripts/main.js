@@ -29,6 +29,8 @@ import { AU, RAD_PER_DEGREE } from "./constants.js"
 import { TailProgram } from "./tail-program.class.js"
 import "../env.js";
 import { parseColor } from "./utils.js"
+import { BodyColorProgram } from "./body-color-program.class.js"
+import { BodyShadowProgram } from "./body-shadow-program.class.js"
 const { vec3 } = glMatrix;
 let W = 0;
 let H = 0;
@@ -63,6 +65,12 @@ const createProgram = (rba) => {
                 break;
             case RenderBodyAs.Body:
                 program = new BodyProgram(gl, cam, ether);
+                break;
+            case RenderBodyAs.BodyColor:
+                program = new BodyColorProgram(gl, cam, ether);
+                break;
+            case RenderBodyAs.BodyShadow:
+                program = new BodyShadowProgram(gl, cam, ether);
                 break;
             case RenderBodyAs.Orbit:
                 program = new OrbitProgram(gl, cam, ether);
@@ -104,28 +112,13 @@ const createBodies = (...items) => {
     if (body !== null && !created)
         createBody(body);
 };
-const resizeCanvasToDisplaySize = () => {
-    // Lookup the size the browser is displaying the canvas in CSS pixels.
-    const displayWidth = canvas.clientWidth;
-    const displayHeight = canvas.clientHeight;
-    // Check if the canvas is not the same size.
-    const needResize = canvas.width !== displayWidth ||
-        canvas.height !== displayHeight;
-    if (needResize) {
-        // Make the canvas the same size
-        canvas.width = displayWidth;
-        canvas.height = displayHeight;
-        gl.viewport(0, 0, displayWidth, displayHeight);
-    }
-    return needResize;
-};
 const run = async () => {
     const distance = cam.farFromTarget;
     if (distance / AU > .099) {
-        ether.writeLine(`You're ${(distance / AU).toFixed(6)} AU far from the target body.`);
+        ether.writeLine(`You're ${(distance / AU).toFixed(6)} au far.`);
     }
     else {
-        ether.writeLine(`You're ${(distance * 1000).toFixed(2)} km far from the target body.`);
+        ether.writeLine(`You're ${(distance * 1000).toFixed(2)} km far.`);
     }
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -140,7 +133,6 @@ const run = async () => {
         ether.move();
         requestAnimationFrame(loop);
     };
-    // window.addEventListener("resize", resizeCanvasToDisplaySize)
     ether.connectsWithWorker(worker);
     loop();
 };
@@ -176,7 +168,7 @@ const comets = async () => {
     const homes = new Body(Holmes);
     const halley = new Body(Halley);
     const haleBopp = new Body(HaleBopp);
-    createBodies(sun, RenderBodyAs.Point, tempel1, RenderBodyAs.Orbit, RenderBodyAs.Tails, homes, RenderBodyAs.Orbit, RenderBodyAs.Tails, halley, RenderBodyAs.Orbit, RenderBodyAs.Tails, haleBopp, RenderBodyAs.Orbit, RenderBodyAs.Tails);
+    createBodies(sun, RenderBodyAs.Point, tempel1, RenderBodyAs.Point, RenderBodyAs.Tails, homes, RenderBodyAs.Point, RenderBodyAs.Tails, halley, RenderBodyAs.Point, RenderBodyAs.Tails, haleBopp, RenderBodyAs.Point, RenderBodyAs.Tails);
     cam.put([
         .2, -6 * AU, 3
     ]).see(sun)
@@ -338,7 +330,7 @@ const movingJupiterWithCallisto = () => {
     .1, Infinity);
     run();
 };
-const neptuneInSolar = () => {
+const movingNeptuneWithMoon = () => {
     setupGLContext();
     cam = new Camera(W / H);
     ether = new Ether(10, 100);
@@ -369,13 +361,13 @@ const single = async (name) => {
     else {
         createBodies(body, RenderBodyAs.Body);
     }
-    cam.put([0, -inf.radius * 5, inf.radius * .68])
+    cam.put([0, -inf.radius * 16, inf.radius * .68])
         .see(body)
         .perspective(Math.PI * (45 / 180), // human naked eyes.
     inf.radius * 4, Infinity);
     run();
 };
-const compare = (...infs) => {
+const doCompare = (...infs) => {
     setupGLContext();
     cam = new Camera(W / H);
     ether = new Ether(10, 10, true);
@@ -407,7 +399,7 @@ const compare = (...infs) => {
     .1, Infinity);
     run();
 };
-const planets01 = () => {
+const compare = () => {
     const SELECTED_BODIES_KEY = "SELECTED_BODIES";
     const selectedBodies = new Set();
     const SELECTED_BODIES = localStorage.getItem(SELECTED_BODIES_KEY);
@@ -484,12 +476,12 @@ const planets01 = () => {
     for (const [name, value] of selectedBodies.entries()) {
         bodies.push(Bodies13[name]);
     }
-    compare(...bodies);
+    doCompare(...bodies);
 };
 const seeBodyFromEarth = (lookatBody) => {
     setupGLContext();
     cam = new Camera(W / H);
-    ether = new Ether(1, 1);
+    ether = new Ether(1 / 20, 1);
     const sun = new Body(Sun);
     const earth = new Body(Earth);
     const luna = new Body(Luna);
@@ -505,14 +497,13 @@ const seeBodyFromEarth = (lookatBody) => {
     progs.forEach(prog => {
         prog.setLightingSource(sun);
     });
-    console.log(progs.length);
     const target = ether.bodies.find(b => b.inf.name === lookatBody);
     cam.put(earth.coordinates)
         .up([0, 0, 1])
         .see(target)
-        .perspective(Math.PI * (2 / 180), // human naked eyes.
+        .perspective(Math.PI * (8 / 180), // human naked eyes.
     2 * Earth.radius, Infinity)
-        .render(ether.bodies);
+        .render();
     run();
 };
 const main = () => {
@@ -534,10 +525,10 @@ const main = () => {
                 movingJupiterWithCallisto();
                 break;
             case "moving3":
-                neptuneInSolar();
+                movingNeptuneWithMoon();
                 break;
             case "compare":
-                planets01();
+                compare();
                 break;
             case "solar":
                 solar();

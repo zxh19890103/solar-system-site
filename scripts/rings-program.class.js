@@ -8,7 +8,7 @@ export class RingsProgram extends ObjectProgram {
         return "/shaders/rings.frag.glsl";
     }
     boot() {
-        const { gl, body, ether } = this;
+        const { gl, body } = this;
         gl.useProgram(this.program);
         body.make(RenderBodyAs.Rings);
         const setColors = this.setFloat32Attrib("aVertexColor", body.colors, 4);

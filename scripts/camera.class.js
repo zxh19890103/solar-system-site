@@ -6,6 +6,8 @@ export class Camera {
     constructor(aspectRatio) {
         this.lookTo = [0, 0, 0];
         this.upTo = [0, 1, 0];
+        this.vmChangeEventSubs = [];
+        this.pmChangeEventSubs = [];
         this.fovy = 45 * RAD_PER_DEGREE;
         this.near = .1;
         this.far = 1000;
@@ -43,6 +45,7 @@ export class Camera {
     setViewMat() {
         glMatrix.mat4.lookAt(this.viewMat, this.coord, this.lookTo, this.upTo);
         glMatrix.mat4.invert(this.viewMat_t, this.viewMat);
+        this.publish("v");
     }
     perspective(fovy, near, far) {
         this.fovy = fovy;
@@ -53,6 +56,28 @@ export class Camera {
     }
     setPerspectiveMat() {
         glMatrix.mat4.perspective(this.projectionMat, this.fovy, this.aspectRatio, this.near, this.far);
+        this.publish("p");
+    }
+    subscribe(type, handler) {
+        if (type === "p") {
+            this.pmChangeEventSubs.push(handler);
+        }
+        else if (type === "v") {
+            this.vmChangeEventSubs.push(handler);
+        }
+    }
+    publish(type) {
+        let handlers = null;
+        if (type === "v") {
+            handlers = this.vmChangeEventSubs;
+        }
+        else if (type === "p") {
+            handlers = this.pmChangeEventSubs;
+        }
+        if (handlers) {
+            console.log(handlers.length);
+            handlers.forEach(h => h());
+        }
     }
     /**
      * @param v V is the coordinates in camera space
@@ -76,39 +101,44 @@ export class Camera {
         }
         return v;
     }
-    render(bodies) {
+    render(...bodies) {
         const body = document.body;
         const h = document.createElement.bind(document);
         const camDiv = h("div");
         camDiv.className = "camera";
         const form = h("form");
         form.className = "form";
-        const looktoInput = h("input");
-        looktoInput.className = "form-control";
-        looktoInput.type = "text";
-        looktoInput.placeholder = "Look At";
-        looktoInput.value = this.lookTo.map(x => 0 ^ x).join(",");
-        looktoInput.addEventListener("change", (ev) => {
+        const atOptions = h("div");
+        atOptions.className = "lookat-options";
+        atOptions.innerHTML = Object.entries(Bodies13).map(([k, b]) => `
+      <a href="javascript:void(0);" data-name="${b.name}">${b.name}</a>
+    `).join("");
+        atOptions.addEventListener("click", (ev) => {
             const target = ev.target;
-            if (!/^\\d+,\d+,\d+\$/.test(target.value))
+            if (target.tagName !== "A")
                 return;
-            const lookat = JSON.parse(target.value);
-            this.see(lookat);
+            const name = target.dataset.name;
+            const body = bodies.find(x => x.inf.name === name);
+            if (!body)
+                return;
+            this.put(body.coordinates);
+            this.setViewMat();
         });
-        form.appendChild(looktoInput);
         const lookatOptions = h("div");
         lookatOptions.className = "lookat-options";
-        lookatOptions.innerHTML = Object.entries(Bodies13).filter(([k, x]) => x.name !== "Earth" && x.name !== "Sun").map(([k, b]) => `
-      <a href="?sys=observe&body=${b.name}" data-name="${b.name}">${b.name}</a>
+        lookatOptions.innerHTML = Object.entries(Bodies13).map(([k, b]) => `
+      <a href="javascript:void(0);" data-name="${b.name}">${b.name}</a>
     `).join("");
-        // lookatOptions.addEventListener("click", (ev) => {
-        //   const target = ev.target as HTMLAnchorElement
-        //   if (target.tagName !== "A") return
-        //   const name = target.dataset.name
-        //   const body = bodies.find(x => x.inf.name === name)
-        //   if (!body) return
-        //   this.see(body)
-        // })
+        lookatOptions.addEventListener("click", (ev) => {
+            const target = ev.target;
+            if (target.tagName !== "A")
+                return;
+            const name = target.dataset.name;
+            const body = bodies.find(x => x.inf.name === name);
+            if (!body)
+                return;
+            this.see(body);
+        });
         const perspectiveInput = h("input");
         perspectiveInput.className = "form-control";
         perspectiveInput.type = "text";
@@ -122,7 +152,7 @@ export class Camera {
             this.fovy = fovy * RAD_PER_DEGREE;
             this.setPerspectiveMat();
         });
-        form.appendChild(looktoInput);
+        form.appendChild(atOptions);
         form.appendChild(lookatOptions);
         form.appendChild(perspectiveInput);
         camDiv.appendChild(form);

@@ -1,35 +1,26 @@
 import { isPowerOfTwo } from "./utils.js"
-export class ObjectProgram {
-    constructor(gl, cam, ether) {
+export class ShaderProgram {
+    constructor(gl) {
         this.gl = gl;
-        this.ether = ether;
-        this.cam = cam;
+        // Create the shader program
+        this.program = gl.createProgram();
     }
     log(...data) {
         console.log("program: ", ...data);
     }
-    async setup() {
-        const vsCode = await this.loadRemoteShaderCode(this.vertexShaderSource);
-        const fsCode = await this.loadRemoteShaderCode(this.fragmentShaderSource);
-        this.initShaderProgram(vsCode, fsCode);
-        // link program in the next mircotasks together..
-        // await this.link()
-    }
-    initShaderProgram(vsCode, fsCode) {
+    linkToGL() {
         const gl = this.gl;
-        const vertexShader = this.loadShader(gl.VERTEX_SHADER, vsCode);
-        const fragmentShader = this.loadShader(gl.FRAGMENT_SHADER, fsCode);
-        // Create the shader program
-        const shaderProgram = gl.createProgram();
-        gl.attachShader(shaderProgram, vertexShader);
-        gl.attachShader(shaderProgram, fragmentShader);
-        gl.linkProgram(shaderProgram);
+        this.gl.linkProgram(this.program);
         // If creating the shader program failed, alert
-        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-            alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
-            return null;
+        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+            alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(this.program));
         }
-        this.program = shaderProgram;
+    }
+    async attchShader(url, shaderType) {
+        const gl = this.gl;
+        const shaderSource = await this.loadRemoteShaderCode(url);
+        const shader = this.loadShader(shaderType, shaderSource);
+        gl.attachShader(this.program, shader);
     }
     loadShader(type, source) {
         const gl = this.gl;
@@ -77,14 +68,14 @@ export class ObjectProgram {
             img.src = url;
         });
     }
-    setUniformTexSampler() {
+    setUniformTexSampler(name, texture, textureNum) {
         const gl = this.gl;
-        gl.activeTexture(gl.TEXTURE0);
-        const loc = gl.getUniformLocation(this.program, "uSampler");
+        gl.activeTexture(textureNum);
+        const loc = gl.getUniformLocation(this.program, name);
         gl.uniform1i(loc, 0);
         return () => {
-            gl.bindTexture(gl.TEXTURE_2D, this.tex);
-            // gl.activeTexture(gl.TEXTURE0)
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.activeTexture(textureNum);
             gl.uniform1i(loc, 0);
         };
     }
@@ -144,23 +135,8 @@ export class ObjectProgram {
             gl.uniformMatrix4fv(loc, false, mat);
         };
     }
-    setBody(body) {
-        this.body = body;
-    }
-    setUniformLMVP(needLocal = true, needModel = true) {
-        const { cam, body } = this;
-        let l = null, m = null;
-        if (needLocal) {
-            l = this.setUniformMatrix4fv("local", body.localMat);
-        }
-        if (needModel) {
-            m = this.setUniformMatrix4fv("model", body.modelMat);
-        }
-        this.setUniformMatrix4fv("view", cam.viewMat)();
-        this.setUniformMatrix4fv("projection", cam.projectionMat)();
-        return () => {
-            l && l();
-            m && m();
-        };
+    setMVP() {
+        const mat = m4.create();
+        this.setUniformMatrix4fv("mvp", mat);
     }
 }
