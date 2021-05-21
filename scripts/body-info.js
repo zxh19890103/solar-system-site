@@ -215,6 +215,7 @@ export const Ceres = {
     mass: approximates(9.3835, .0001) * .0001,
     radius: .46973,
     inclination: (10.59406704 + Earth.inclination) * RAD_PER_DEGREE,
+    rotationPeriod: 1,
     axialTilt: 4 * RAD_PER_DEGREE
 };
 export const Eris = {
@@ -228,6 +229,7 @@ export const Eris = {
     mass: approximates(1.6466, .0085) * .01,
     radius: approximates(1163, 6) * .001,
     inclination: 44.040 * RAD_PER_DEGREE,
+    rotationPeriod: 1,
     axialTilt: 78 * RAD_PER_DEGREE
 };
 // Commets bellow
